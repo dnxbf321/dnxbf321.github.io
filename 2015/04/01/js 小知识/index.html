@@ -193,14 +193,16 @@
 <script src="/js/header-animate.js"></script>
 
 
+
+<script src="/bower_components/jquery_lazyload/jquery.lazyload.js"></script>
+<script>
+	$('img.lazy').lazyload();
+</script>
+
 	<script src="/bower_components/fancybox/source/jquery.fancybox.pack.js"></script>
 	<script>
-		(function ($) {
-			$('.fancybox').fancybox();
-		})(jQuery);
+		$('.fancybox').fancybox();
 	</script>
-
-
 
 
 
