@@ -61,6 +61,60 @@
 							<i class="fa fa-file"></i>
 						
 					</div>
+					<time datetime="2016-02-23T02:29:15.000Z">2016-02-23</time>
+				</div>
+			
+			
+	
+		<h1 class="title" data-role="articleTitle"><a href="/2016/02/23/学习 co/">学习 co</a></h1>
+	
+
+		</header>
+		<div class="entry">
+			
+				<p>co 是使用 ES6 generator 的必然会引用到的第三方库，它很好的解决了 yield 表达式返回值的问题，通过自动的不断调用 .next 使得函数向下执行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> co = <span class="built_in">require</span>(<span class="string">'co'</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">yieldFunc</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="keyword">yield</span> ++i;</span><br><span class="line">  <span class="keyword">var</span> a2 = <span class="keyword">yield</span> ++i;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="number">1</span>: a,</span><br><span class="line">    <span class="number">2</span>: a2</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">co(<span class="function"><span class="keyword">function</span>*(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ret = <span class="keyword">yield</span> yieldFunc();</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">ret</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(ret);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上面是一个 co 的使用范例。它接受一个 generator 函数作为参数，返回一个 Promise 对象，将 generator 函数的执行结果作为 resolve 的参数，通过调用 then 方法，将结果打印到控制台。</p>
+<p>co 的源码很短，不过 200 来行（注释计算在内了），如果我们只按照上面的例子调用 co，co 可以简化为如下代码<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = simpleCo;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">simpleCo</span>(<span class="params">gen</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ctx = <span class="keyword">this</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    gen = gen.call(ctx);</span><br><span class="line">    fulNext();</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fulNext</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> ret = gen.next(res);</span><br><span class="line">        <span class="keyword">if</span> (!ret.done) &#123;</span><br><span class="line">          fulNext(ret.value);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          resolve(ret.value);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">catch</span> ( e ) &#123;</span><br><span class="line">        reject(e);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>20 行足矣，源码见 <a href="https://github.com/dnxbf321/simple-co" target="_blank" rel="external">github</a>。</p>
+
+			
+		</div>
+		<footer class="clearfix">
+			
+			
+	<div class="categories">
+		<i class="fa fa-folder"></i>
+		
+			<a href="/categories/前端/">前端</a>
+		
+	</div>
+
+			
+	<div class="tags">
+		<i class="fa fa-tags"></i>
+		
+			<a href="/tags/Javascript/">#Javascript</a>
+		
+			<a href="/tags/前端/">#前端</a>
+		
+	</div>
+
+		</footer>
+	</div>
+</article>
+	
+		
+		<article class="post">
+	<div class="post-content">
+		<header>
+			
+				<div class="meta">
+					<div class="icon">
+						
+							<i class="fa fa-file"></i>
+						
+					</div>
 					<time datetime="2016-01-05T02:00:20.000Z">2016-01-05</time>
 				</div>
 			
@@ -229,6 +283,8 @@
 <p>  yield 语句本身没有返回值，通过在 next 带上一个参数，设置上一个 yield 的返回值。</p>
   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">f</span>(<span class="params">x=1</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> y = <span class="keyword">yield</span> (x + <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">var</span> z = <span class="keyword">yield</span> (x + y);</span><br><span class="line">  <span class="keyword">return</span> x + y + z;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> it = f();</span><br><span class="line">it.next(); <span class="comment">// x=1, y=undefined, z=undefined</span></span><br><span class="line">it.next(<span class="number">4</span>); <span class="comment">// x=1, y=4, z=undefined</span></span><br><span class="line">it.next(<span class="number">10</span>); <span class="comment">// x=1, y=4, z=10</span></span><br></pre></td></tr></table></figure>
 <p>  for … of … 可代替 next</p>
+<p>如果在 generator 函数中再调用其他 generator 函数，需要使用 yield * 语句</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function * bar() &#123;&#10;  yield 1;&#10;&#125;&#10;function * foo() &#123;&#10;  yield * bar();&#10;&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="Promise">Promise</h2><p>  一个对象，用来传递异步操作的消息。它代表了某个未来才会知道结果的事件（通常是一个异步操作），并且这个事件提供统一的API，可供进一步处理。</p>
   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    resolve(<span class="string">'a'</span>);</span><br><span class="line">  &#125;, <span class="number">2000</span>);</span><br><span class="line">&#125;);</span><br><span class="line">p.then(<span class="function"><span class="keyword">function</span>(<span class="params">result</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 2秒后输出 a</span></span><br></pre></td></tr></table></figure>
 <p>  promise.then 为 promise 实例添加状态改变时的回调函数，第一个参数为 resolved 的回调，第二个参数是 rejected 的回调</p>
@@ -590,82 +646,6 @@
 			<a href="/tags/CSS/">#CSS</a>
 		
 			<a href="/tags/前端/">#前端</a>
-		
-	</div>
-
-		</footer>
-	</div>
-</article>
-	
-		
-		<article class="photo">
-	<div class="post-content">
-		<header>
-			
-				<div class="meta">
-					<div class="icon">
-						
-							<i class="fa fa-photo"></i>
-						
-					</div>
-					<time datetime="2014-05-04T12:00:47.000Z">2014-05-04</time>
-				</div>
-			
-			
-	
-		<h1 class="title" data-role="articleTitle"><a href="/2014/05/04/台湾自由行-台北/">台湾自由行 - 台北 </a></h1>
-	
-
-		</header>
-		<div class="entry">
-			
-				<h3 id="台湾夜景">台湾夜景</h3>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0020.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0020.jpg?imageView2/2/w/640"></a>
-
-<h3 id="文化产业园">文化产业园</h3>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/P4270455.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/P4270455.jpg?imageView2/2/w/640"></a>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/P4270460.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/P4270460.jpg?imageView2/2/w/640"></a>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/P4270461.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/P4270461.jpg?imageView2/2/w/640"></a>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0022.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0022.jpg?imageView2/2/w/640"></a>
-
-<h3 id="故宫">故宫</h3>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/P4270494.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/P4270494.jpg?imageView2/2/w/640"></a>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0025.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0025.jpg?imageView2/2/w/640"></a>
-
-<h3 id="夜市小吃">夜市小吃</h3>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0034.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0034.jpg?imageView2/2/w/640"></a>
-
-<h3 id="中山纪念堂">中山纪念堂</h3>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/P4270489.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/P4270489.jpg?imageView2/2/w/640"></a>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/P4270476.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/P4270476.jpg?imageView2/2/w/640"></a>
-
-<h3 id="101大厦">101大厦</h3>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/P4270492.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/P4270492.jpg?imageView2/2/w/640"></a>
-
-<h3 id="往下一站的车票">往下一站的车票</h3>
-<a href="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0038.jpg" class="fancybox" target="_blank" rel="external"><img class="lazy" data-original="http://7xpvl0.com1.z0.glb.clouddn.com/IMG_0038.jpg?imageView2/2/w/640"></a>
-
-			
-		</div>
-		<footer class="clearfix">
-			
-			
-	<div class="categories">
-		<i class="fa fa-folder"></i>
-		
-			<a href="/categories/游记/">游记</a>
-		
-	</div>
-
-			
-	<div class="tags">
-		<i class="fa fa-tags"></i>
-		
-			<a href="/tags/台湾/">#台湾</a>
-		
-			<a href="/tags/旅游/">#旅游</a>
-		
-			<a href="/tags/自由行/">#自由行</a>
 		
 	</div>
 

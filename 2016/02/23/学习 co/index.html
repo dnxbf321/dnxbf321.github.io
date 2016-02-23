@@ -1,0 +1,166 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="description" content="在前端的道路上砥砺前行，Just do IT">
+
+	
+		
+			<link rel="stylesheet" href="/bower_components/fancybox/source/jquery.fancybox.css">
+		
+		<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="/css/style.css">
+	
+
+	<title>四面的博客 - 做一枚有用的前端工程师</title>
+</head>
+<body>
+<header id="header">
+	<div class="center">
+		<div class="wrap">
+			<div id="site">
+				<h1><a href="/">四面的博客</a></h1>
+				
+					<h2><a href="/">做一枚有用的前端工程师</a></h2>
+				
+			</div>
+			<nav id="menu">
+				<ul>
+					
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives/">归档</a></li>
+					
+				</ul>
+			</nav>
+		</div>
+	</div>
+</header>
+
+<div id="content">
+	<div class="center">
+		<div class="main-col">
+			
+
+	
+	<article class="post">
+	<div class="post-content">
+		<header>
+			
+				<div class="meta">
+					<div class="icon">
+						
+							<i class="fa fa-file"></i>
+						
+					</div>
+					<time datetime="2016-02-23T02:29:15.000Z">2016-02-23</time>
+				</div>
+			
+			
+	
+		<h1 class="title">学习 co</h1>
+	
+
+		</header>
+		<div class="entry">
+			
+				<p>co 是使用 ES6 generator 的必然会引用到的第三方库，它很好的解决了 yield 表达式返回值的问题，通过自动的不断调用 .next 使得函数向下执行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> co = <span class="built_in">require</span>(<span class="string">'co'</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">yieldFunc</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="keyword">yield</span> ++i;</span><br><span class="line">  <span class="keyword">var</span> a2 = <span class="keyword">yield</span> ++i;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="number">1</span>: a,</span><br><span class="line">    <span class="number">2</span>: a2</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">co(<span class="function"><span class="keyword">function</span>*(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ret = <span class="keyword">yield</span> yieldFunc();</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">ret</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(ret);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上面是一个 co 的使用范例。它接受一个 generator 函数作为参数，返回一个 Promise 对象，将 generator 函数的执行结果作为 resolve 的参数，通过调用 then 方法，将结果打印到控制台。</p>
+<p>co 的源码很短，不过 200 来行（注释计算在内了），如果我们只按照上面的例子调用 co，co 可以简化为如下代码<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = simpleCo;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">simpleCo</span>(<span class="params">gen</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ctx = <span class="keyword">this</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    gen = gen.call(ctx);</span><br><span class="line">    fulNext();</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fulNext</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> ret = gen.next(res);</span><br><span class="line">        <span class="keyword">if</span> (!ret.done) &#123;</span><br><span class="line">          fulNext(ret.value);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          resolve(ret.value);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">catch</span> ( e ) &#123;</span><br><span class="line">        reject(e);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>20 行足矣，源码见 <a href="https://github.com/dnxbf321/simple-co" target="_blank" rel="external">github</a>。</p>
+
+			
+		</div>
+		<footer class="clearfix">
+			
+			
+	<div class="categories">
+		<i class="fa fa-folder"></i>
+		
+			<a href="/categories/前端/">前端</a>
+		
+	</div>
+
+			
+	<div class="tags">
+		<i class="fa fa-tags"></i>
+		
+			<a href="/tags/Javascript/">#Javascript</a>
+		
+			<a href="/tags/前端/">#前端</a>
+		
+	</div>
+
+		</footer>
+	</div>
+</article>
+
+	
+<section id="comment">
+	<div id="disqus_thread"></div>
+</section>
+<script>
+	(function (disqus_shortname) {
+		window.addEventListener('DOMContentLoaded', function () {
+			var dsq = document.createElement('script');
+			dsq.type = 'text/javascript';
+			dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			document.getElementsByTagName('head')[0].appendChild(dsq);
+		}, false);
+	}('dnxbf321'));
+</script>
+
+
+
+		</div>
+		
+
+	
+
+	<a href="https://dnxbf321.github.io/2016/01/05/ECMAScript 2015 (ES6) 概览/" id="postNext" class="icon fa fa-chevron-right"></a>
+
+
+
+	</div>
+</div>
+
+<footer id="footer">
+	<div class="center">
+		&copy; 2016
+		
+			Jason Tung
+		.
+		&nbsp;&nbsp;
+		Blog generated by <a href="http://hexo.io">hexo</a>
+	</div>
+</footer>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/js/header-animate.js"></script>
+
+
+
+<script src="/bower_components/jquery_lazyload/jquery.lazyload.js"></script>
+<script>
+	$('img.lazy').lazyload();
+</script>
+
+	<script src="/bower_components/fancybox/source/jquery.fancybox.pack.js"></script>
+	<script>
+		$('.fancybox').fancybox();
+	</script>
+
+
+
+
+</body>
+</html>
