@@ -1,0 +1,185 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="description" content="在前端的道路上砥砺前行，Just do IT">
+
+	
+		
+			<link rel="stylesheet" href="/bower_components/fancybox/source/jquery.fancybox.css">
+		
+		<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="/css/style.css">
+	
+
+	<title>四面的博客 - 做一枚有用的前端工程师</title>
+</head>
+<body>
+<header id="header">
+	<div class="center">
+		<div class="wrap">
+			<div id="site">
+				<h1><a href="/">四面的博客</a></h1>
+				
+					<h2><a href="/">做一枚有用的前端工程师</a></h2>
+				
+			</div>
+			<nav id="menu">
+				<ul>
+					
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives/">归档</a></li>
+					
+				</ul>
+			</nav>
+		</div>
+	</div>
+</header>
+
+<div id="content">
+	<div class="center">
+		<div class="main-col">
+			
+
+	
+	<article class="post">
+	<div class="post-content">
+		<header>
+			
+				<div class="meta">
+					<div class="icon">
+						
+							<i class="fa fa-file"></i>
+						
+					</div>
+					<time datetime="2016-02-24T06:14:25.000Z">2016-02-24</time>
+				</div>
+			
+			
+	
+		<h1 class="title">学习 koa</h1>
+	
+
+		</header>
+		<div class="entry">
+			
+				<h2 id="背景">背景</h2><p>最近项目中首次使用 node 作为前端后台，便于同步渲染模板。项目中，少不了需要选择一个框架来充当骨架。对，我们选择的当红炸子鸡『koa』。</p>
+<h2 id="基本用法">基本用法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入 koa</span></span><br><span class="line"><span class="keyword">import</span> koa <span class="keyword">from</span> <span class="string">'koa'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例化 koa</span></span><br><span class="line"><span class="keyword">let</span> app = <span class="keyword">new</span> koa();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 请求返回 hello world</span></span><br><span class="line">app.use(<span class="function"><span class="keyword">function</span> *(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.body = <span class="string">'Hello World'</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 启动服务器，监听端口 3000</span></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+<p>注意，我们使用了 es6 的语法，为了让 node 可以顺利运行，需要先引用 babel/register 。</p>
+<p>概括起来，分三步走：</p>
+<ol>
+<li>引入并实例化 koa</li>
+<li>往 koa 中插入中间件，如 koa-router、koa-static 中间件</li>
+<li>启动服务</li>
+</ol>
+<h2 id="看源码">看源码</h2><p>以下是 koa/lib/Application.js 部分代码<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = Application.prototype;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Application</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">Object</span>.setPrototypeOf(Application.prototype, Emitter.prototype);</span><br><span class="line">app.listen = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line">app.use = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line">app.callback = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line">app.createContext = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line">app.onerror = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看到没有，代码毫无花哨可言，这不就是个普通的构造函数嘛！</p>
+<p>下面我们逐个展开看代码</p>
+<p>先上 Application function<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Application</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 检查作用域 this，兼容 new koa() 和 koa() 两种调用方式。这行完全可以删掉，强烈建议程序员使用 new koa() 这种形式</span></span><br><span class="line">  <span class="keyword">if</span> (!(<span class="keyword">this</span> <span class="keyword">instanceof</span> Application)) <span class="keyword">return</span> <span class="keyword">new</span> Application;</span><br><span class="line">  <span class="comment">// 添加 env 对象到 this</span></span><br><span class="line">  <span class="keyword">this</span>.env = process.env.NODE_ENV || <span class="string">'development'</span>;</span><br><span class="line">  <span class="comment">// 添加 subdomainOffset 到 this</span></span><br><span class="line">  <span class="keyword">this</span>.subdomainOffset = <span class="number">2</span>;</span><br><span class="line">  <span class="comment">// 初始化 middleware</span></span><br><span class="line">  <span class="keyword">this</span>.middleware = [];</span><br><span class="line">  <span class="comment">// 将 context 对象添加到 this</span></span><br><span class="line">  <span class="keyword">this</span>.context = <span class="built_in">Object</span>.create(context); <span class="comment">// context = require('./context')</span></span><br><span class="line">  <span class="comment">// 将 request 对象添加到 this</span></span><br><span class="line">  <span class="keyword">this</span>.request = <span class="built_in">Object</span>.create(request); <span class="comment">// request = require('./request');</span></span><br><span class="line">  <span class="comment">// 将 response 对象添加到 this</span></span><br><span class="line">  <span class="keyword">this</span>.response = <span class="built_in">Object</span>.create(response); <span class="comment">// response = require('./response');</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Application.prototype = Emitter.prototype</span></span><br><span class="line"><span class="built_in">Object</span>.setPrototypeOf(Application.prototype, Emitter.prototype); <span class="comment">// Emitter = require('events').EventEmitter</span></span><br></pre></td></tr></table></figure>
+<p>再看 app.use<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 添加中间件</span><br><span class="line"> */</span></span><br><span class="line">app.use = <span class="function"><span class="keyword">function</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">  <span class="comment">// 检查 fn 是否是 generator 函数，非将出现错误</span></span><br><span class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.experimental) &#123;</span><br><span class="line">    assert(fn &amp;&amp; <span class="string">'GeneratorFunction'</span> == fn.constructor.name, <span class="string">'app.use() requires a generator function'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  debug(<span class="string">'use %s'</span>, fn._name || fn.name || <span class="string">'-'</span>);</span><br><span class="line">  <span class="comment">// 将 fn 中间件保存到 middleware 数组中</span></span><br><span class="line">  <span class="keyword">this</span>.middleware.push(fn);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>再看 app.callback<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 返回服务启动的回调方法</span><br><span class="line"> */</span></span><br><span class="line">app.callback = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 且将 this.experimental 定义为 false，只看右边分支</span></span><br><span class="line">  <span class="comment">// compose = require('koa-compose')</span></span><br><span class="line">  <span class="comment">// compose 将 middleware 数组元素，包装成一个 generator 函数</span></span><br><span class="line">  <span class="comment">// co.wrap 将 generator 函数包装秤一个 promise 函数</span></span><br><span class="line">  <span class="keyword">var</span> fn = <span class="keyword">this</span>.experimental</span><br><span class="line">    ? compose_es7(<span class="keyword">this</span>.middleware)</span><br><span class="line">    : co.wrap(compose(<span class="keyword">this</span>.middleware));</span><br><span class="line">  <span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.listeners(<span class="string">'error'</span>).length) <span class="keyword">this</span>.on(<span class="string">'error'</span>, <span class="keyword">this</span>.onerror);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回函数</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    res.statusCode = <span class="number">404</span>;</span><br><span class="line">    <span class="comment">// 创建作用域</span></span><br><span class="line">    <span class="keyword">var</span> ctx = self.createContext(req, res);</span><br><span class="line">    <span class="comment">// 监听 response，完成时执行回调 app.onerror 方法，将错误打印出来</span></span><br><span class="line">    onFinished(res, ctx.onerror);</span><br><span class="line">    <span class="comment">// 执行 fn，promise 状态为 resolve 时响应请求，将结果返回给请求方</span></span><br><span class="line">    fn.call(ctx).then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      respond.call(ctx);</span><br><span class="line">    &#125;).catch(ctx.onerror);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>再看 app.listen<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">app.listen = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  debug(<span class="string">'listen'</span>);</span><br><span class="line">  <span class="comment">// 创建 sever</span></span><br><span class="line">  <span class="keyword">var</span> server = http.createServer(<span class="keyword">this</span>.callback());</span><br><span class="line">  <span class="comment">// 将 server 开始监听工作</span></span><br><span class="line">  <span class="keyword">return</span> server.listen.apply(server, <span class="built_in">arguments</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>再看 app.createContext<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 对 this.context 进行扩展，生成新的 context，作为中间件的作用域</span><br><span class="line"> */</span></span><br><span class="line">app.createContext = <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> context = <span class="built_in">Object</span>.create(<span class="keyword">this</span>.context);</span><br><span class="line">  <span class="keyword">var</span> request = context.request = <span class="built_in">Object</span>.create(<span class="keyword">this</span>.request);</span><br><span class="line">  <span class="keyword">var</span> response = context.response = <span class="built_in">Object</span>.create(<span class="keyword">this</span>.response);</span><br><span class="line">  context.app = request.app = response.app = <span class="keyword">this</span>;</span><br><span class="line">  context.req = request.req = response.req = req;</span><br><span class="line">  context.res = request.res = response.res = res;</span><br><span class="line">  request.ctx = response.ctx = context;</span><br><span class="line">  request.response = response;</span><br><span class="line">  response.request = request;</span><br><span class="line">  context.onerror = context.onerror.bind(context);</span><br><span class="line">  context.originalUrl = request.originalUrl = req.url;</span><br><span class="line">  context.cookies = <span class="keyword">new</span> Cookies(req, res, <span class="keyword">this</span>.keys);</span><br><span class="line">  context.accept = request.accept = accepts(req);</span><br><span class="line">  context.state = &#123;&#125;;</span><br><span class="line">  <span class="keyword">return</span> context;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>至此，Application.js 分析完毕。</p>
+<p>再移步到 context.js。context.js 中初始化了 context 的所有方法。</p>
+<p>再移步到 response.js、request.js，这两个 js 是对 context.response、context.request 方法的实现。</p>
+<p>over!!!</p>
+
+			
+		</div>
+		<footer class="clearfix">
+			
+			
+	<div class="categories">
+		<i class="fa fa-folder"></i>
+		
+			<a href="/categories/前端/">前端</a>
+		
+	</div>
+
+			
+	<div class="tags">
+		<i class="fa fa-tags"></i>
+		
+			<a href="/tags/Javascript/">#Javascript</a>
+		
+			<a href="/tags/Node/">#Node</a>
+		
+			<a href="/tags/前端/">#前端</a>
+		
+	</div>
+
+		</footer>
+	</div>
+</article>
+
+	
+<section id="comment">
+	<div id="disqus_thread"></div>
+</section>
+<script>
+	(function (disqus_shortname) {
+		window.addEventListener('DOMContentLoaded', function () {
+			var dsq = document.createElement('script');
+			dsq.type = 'text/javascript';
+			dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			document.getElementsByTagName('head')[0].appendChild(dsq);
+		}, false);
+	}('dnxbf321'));
+</script>
+
+
+
+		</div>
+		
+
+	
+
+	<a href="https://dnxbf321.github.io/2016/02/23/学习 co/" id="postNext" class="icon fa fa-chevron-right"></a>
+
+
+
+	</div>
+</div>
+
+<footer id="footer">
+	<div class="center">
+		&copy; 2016
+		
+			Jason Tung
+		.
+		&nbsp;&nbsp;
+		Blog generated by <a href="http://hexo.io">hexo</a>
+	</div>
+</footer>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/js/header-animate.js"></script>
+
+
+
+<script src="/bower_components/jquery_lazyload/jquery.lazyload.js"></script>
+<script>
+	$('img.lazy').lazyload();
+</script>
+
+	<script src="/bower_components/fancybox/source/jquery.fancybox.pack.js"></script>
+	<script>
+		$('.fancybox').fancybox();
+	</script>
+
+
+
+
+</body>
+</html>
