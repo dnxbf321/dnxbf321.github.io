@@ -70,6 +70,76 @@
 							<i class="fa fa-file"></i>
 						
 					</div>
+					<time datetime="2016-02-26T05:48:00.000Z">2016-02-26</time>
+				</div>
+			
+			
+	
+		<h1 class="title" data-role="articleTitle"><a href="/2016/02/26/函数作用域修改大法/">函数作用域修改大法</a></h1>
+	
+
+		</header>
+		<div class="entry">
+			
+				<ul>
+<li><p>Function.prototype.bind()</p>
+<p>bind()方法会创建一个新函数，称为绑定函数，当调用这个绑定函数时，绑定函数会以创建它时传入 bind() 方法的第一个参数作为 this，传入 bind() 方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数。</p>
+<p>语法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * thisArg</span><br><span class="line"> * 当绑定函数被调用时，该参数会作为原函数运行时的 this 指向。当使用new 操作符调用绑定函数时，该参数无效。</span><br><span class="line"> * arg1, arg2, ...</span><br><span class="line"> * 当绑定函数被调用时，这些参数加上绑定函数本身的参数会按照顺序作为原函数运行时的参数。</span><br><span class="line"> */</span></span><br><span class="line">fun.bind(thisArg[, arg1[, arg2[, ...]]])</span><br></pre></td></tr></table></figure>
+<p>支持情况：ie &gt;= 9、chrome、safari。</p>
+<p>举例（摘自<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind" target="_blank" rel="external">MDN</a>）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">LateBloomer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.petalCount = <span class="built_in">Math</span>.ceil(<span class="built_in">Math</span>.random() * <span class="number">12</span>) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Declare bloom after a delay of 1 second</span></span><br><span class="line">LateBloomer.prototype.bloom = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">window</span>.setTimeout(<span class="keyword">this</span>.declare.bind(<span class="keyword">this</span>), <span class="number">1000</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">LateBloomer.prototype.declare = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'I am a beautiful flower with '</span> +</span><br><span class="line">    <span class="keyword">this</span>.petalCount + <span class="string">' petals!'</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flower = <span class="keyword">new</span> LateBloomer();</span><br><span class="line">flower.bloom();  <span class="comment">// 一秒钟后, 调用'declare'方法</span></span><br></pre></td></tr></table></figure>
+<p>为了兼容低版本浏览器，可以使用如下 polyfill</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!<span class="built_in">Function</span>.prototype.bind) &#123;</span><br><span class="line">  <span class="built_in">Function</span>.prototype.bind = <span class="function"><span class="keyword">function</span> (<span class="params">oThis</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="keyword">this</span> !== <span class="string">"function"</span>) &#123;</span><br><span class="line">      <span class="comment">// closest thing possible to the ECMAScript 5</span></span><br><span class="line">      <span class="comment">// internal IsCallable function</span></span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">"Function.prototype.bind - what is trying to be bound is not callable"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> aArgs = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">1</span>),</span><br><span class="line">      fToBind = <span class="keyword">this</span>,</span><br><span class="line">      fNOP = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;,</span><br><span class="line">      fBound = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fToBind.apply(<span class="keyword">this</span> <span class="keyword">instanceof</span> fNOP</span><br><span class="line">                              ? <span class="keyword">this</span></span><br><span class="line">                              : oThis || <span class="keyword">this</span>,</span><br><span class="line">          aArgs.concat(<span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>)));</span><br><span class="line">      &#125;;</span><br><span class="line"></span><br><span class="line">    fNOP.prototype = <span class="keyword">this</span>.prototype;</span><br><span class="line">    fBound.prototype = <span class="keyword">new</span> fNOP();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> fBound;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Function.prototype.call 和 Function.prototype.apply</p>
+<p>举例（摘自<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call" target="_blank" rel="external">MDN</a>）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Product</span>(<span class="params">name, price</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="keyword">this</span>.price = price;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (price &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="built_in">RangeError</span>(<span class="string">'Cannot create product '</span> +</span><br><span class="line">                      <span class="keyword">this</span>.name + <span class="string">' with a negative price'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Food</span>(<span class="params">name, price</span>) </span>&#123;</span><br><span class="line">  Product.call(<span class="keyword">this</span>, name, price);</span><br><span class="line">  <span class="keyword">this</span>.category = <span class="string">'food'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Toy</span>(<span class="params">name, price</span>) </span>&#123;</span><br><span class="line">  Product.call(<span class="keyword">this</span>, name, price);</span><br><span class="line">  <span class="keyword">this</span>.category = <span class="string">'toy'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> cheese = <span class="keyword">new</span> Food(<span class="string">'feta'</span>, <span class="number">5</span>);</span><br><span class="line"><span class="keyword">var</span> fun = <span class="keyword">new</span> Toy(<span class="string">'robot'</span>, <span class="number">40</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>$.proxy(fn, context[, arg1[, arg2[, …]]])</p>
+<p>这里使用的 jQuery 方法，接受两个参数，第一个为输入的函数，第二个为要绑定到的作用域，之后的参数加上绑定函数本身的参数会按照顺序作为原函数运行时的参数。此方法返回一个作用域为 context 的新函数。</p>
+<p>举例（摘自<a href="https://api.jquery.com/jQuery.proxy/" target="_blank" rel="external">jQuery</a>）：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>jQuery.proxy demo<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://code.jquery.com/jquery-1.10.2.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span><span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"button"</span> <span class="attribute">id</span>=<span class="value">"test"</span>&gt;</span>Test<span class="tag">&lt;/<span class="title">button</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"log"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"><span class="keyword">var</span> me = &#123;</span><br><span class="line">  type: <span class="string">"zombie"</span>,</span><br><span class="line">  test: <span class="function"><span class="keyword">function</span>(<span class="params"> event </span>) </span>&#123;</span><br><span class="line">    <span class="comment">// Without proxy, `this` would refer to the event target</span></span><br><span class="line">    <span class="comment">// use event.target to reference that element.</span></span><br><span class="line">    <span class="keyword">var</span> element = event.target;</span><br><span class="line">    $( element ).css( <span class="string">"background-color"</span>, <span class="string">"red"</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// With proxy, `this` refers to the me object encapsulating</span></span><br><span class="line">    <span class="comment">// this function.</span></span><br><span class="line">    $( <span class="string">"#log"</span> ).append( <span class="string">"Hello "</span> + <span class="keyword">this</span>.type + <span class="string">"&lt;br&gt;"</span> );</span><br><span class="line">    $( <span class="string">"#test"</span> ).off( <span class="string">"click"</span>, <span class="keyword">this</span>.test );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> you = &#123;</span><br><span class="line">  type: <span class="string">"person"</span>,</span><br><span class="line">  test: <span class="function"><span class="keyword">function</span>(<span class="params"> event </span>) </span>&#123;</span><br><span class="line">    $( <span class="string">"#log"</span> ).append( <span class="keyword">this</span>.type + <span class="string">" "</span> );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Execute you.test() in the context of the `you` object</span></span><br><span class="line"><span class="comment">// no matter where it is called</span></span><br><span class="line"><span class="comment">// i.e. the `this` keyword will refer to `you`</span></span><br><span class="line"><span class="keyword">var</span> youClick = $.proxy( you.test, you );</span><br><span class="line"></span><br><span class="line"><span class="comment">// attach click handlers to #test</span></span><br><span class="line">$( <span class="string">"#test"</span> )</span><br><span class="line">  <span class="comment">// this === "zombie"; handler unbound after first click</span></span><br><span class="line">  .on( <span class="string">"click"</span>, $.proxy( me.test, me ) )</span><br><span class="line"></span><br><span class="line">  <span class="comment">// this === "person"</span></span><br><span class="line">  .on( <span class="string">"click"</span>, youClick )</span><br><span class="line"></span><br><span class="line">  <span class="comment">// this === "zombie"</span></span><br><span class="line">  .on( <span class="string">"click"</span>, $.proxy( you.test, me ) )</span><br><span class="line"></span><br><span class="line">  <span class="comment">// this === "&lt;button&gt; element"</span></span><br><span class="line">  .on( <span class="string">"click"</span>, you.test );</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+			
+		</div>
+		<footer class="clearfix">
+			
+			
+	<div class="categories">
+		<i class="fa fa-folder"></i>
+		
+			<a href="/categories/前端/">前端</a>
+		
+	</div>
+
+			
+	<div class="tags">
+		<i class="fa fa-tags"></i>
+		
+			<a href="/tags/Javascript/">#Javascript</a>
+		
+			<a href="/tags/前端/">#前端</a>
+		
+	</div>
+
+		</footer>
+	</div>
+</article>
+	
+		
+		<article class="post">
+	<div class="post-content">
+		<header>
+			
+				<div class="meta">
+					<div class="icon">
+						
+							<i class="fa fa-file"></i>
+						
+					</div>
 					<time datetime="2016-02-24T07:15:28.000Z">2016-02-24</time>
 				</div>
 			
@@ -465,105 +535,6 @@
 		<i class="fa fa-tags"></i>
 		
 			<a href="/tags/Javascript/">#Javascript</a>
-		
-			<a href="/tags/前端/">#前端</a>
-		
-	</div>
-
-		</footer>
-	</div>
-</article>
-	
-		
-		<article class="post">
-	<div class="post-content">
-		<header>
-			
-				<div class="meta">
-					<div class="icon">
-						
-							<i class="fa fa-file"></i>
-						
-					</div>
-					<time datetime="2015-04-01T11:25:20.000Z">2015-04-01</time>
-				</div>
-			
-			
-	
-		<h1 class="title" data-role="articleTitle"><a href="/2015/04/01/em-与-px-之间的换算关系/">em 与 px 之间的换算关系</a></h1>
-	
-
-		</header>
-		<div class="entry">
-			
-				<table>
-<thead>
-<tr>
-<th>px</th>
-<th>em</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>12</td>
-<td>0.75</td>
-</tr>
-<tr>
-<td>13</td>
-<td>0.8</td>
-</tr>
-<tr>
-<td>14</td>
-<td>0.875</td>
-</tr>
-<tr>
-<td>15</td>
-<td>0.9375</td>
-</tr>
-<tr>
-<td>16</td>
-<td>1</td>
-</tr>
-<tr>
-<td>18</td>
-<td>1.125</td>
-</tr>
-<tr>
-<td>20</td>
-<td>1.25</td>
-</tr>
-<tr>
-<td>22</td>
-<td>1.375</td>
-</tr>
-<tr>
-<td>24</td>
-<td>1.5</td>
-</tr>
-<tr>
-<td>25</td>
-<td>1.5625</td>
-</tr>
-</tbody>
-</table>
-
-			
-		</div>
-		<footer class="clearfix">
-			
-			
-	<div class="categories">
-		<i class="fa fa-folder"></i>
-		
-			<a href="/categories/前端/">前端</a>
-		
-	</div>
-
-			
-	<div class="tags">
-		<i class="fa fa-tags"></i>
-		
-			<a href="/tags/CSS/">#CSS</a>
 		
 			<a href="/tags/前端/">#前端</a>
 		
